@@ -1,5 +1,5 @@
 <?php
-/*
+
     // Arquivo para conectar com o banco de dados
 
     $tipo_banco = "mysql";      // Identificador do SGBD usado
@@ -17,5 +17,5 @@
     }catch (PDOException $e){
         throw new PDOException($e->getMessage(), $e->getCode());
     }
-*/
+
 ?>

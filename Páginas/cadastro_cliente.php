@@ -1,25 +1,30 @@
+<?php
+require "conexao.php";
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="estilos/cadastro_funcionarios.css">
+    <link rel="stylesheet" type="text/css" href="estilos/cd_cliente.css">
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
-    <title>Cadastro Funcionário</title>
+    <title>Cadastro Cliente</title>
+
 </head>
 
 <body>
-    
-
+ 
     <div class="main">
         <input type="checkbox" id="chk" aria-hidden="true">
         <div class="Login">
             <form>
-                <label for="chk" aria-hidden="true">Cadastrar Funcionário</label>
+                <label for="chk" aria-hidden="true">Cadastrar Cliente</label>
                 <input type="email" name="email_cliente" placeholder="E-mail" required="">
-                <input type="codigo_funcionario" name="codigo_funcionario" placeholder="registro do funcionário" required="">
-                <input type="password" name="pswd_funcionario" placeholder="Senha" required="">
+                <input type="nome_empresa" name="nome_empresa" placeholder="Nome da empresa" required="">
+                <input type="password" name="pswd_cliente" placeholder="Senha" required="">
                 <button>Login</button>
             </form>
 

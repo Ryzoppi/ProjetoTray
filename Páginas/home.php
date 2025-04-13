@@ -1,5 +1,5 @@
 <?php
-include "conexao.php";
+require "conexao.php";
 
 $sql = "select * from projetos";    // String com o comando SQL a ser executado
 // $comando = $pdo->query($sql);       // Montamos e deixamos o comando SQL preparado
