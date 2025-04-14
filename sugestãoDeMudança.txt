@@ -1,3 +1,4 @@
 Home:
 1 - Fazer um segundo bloco do lado de Projetos onde ficariam os concluidos e daria pra clicar nele onde ele expandiria e o de projetos em andamento encolheria (ficaria igual o de concluidos antes de clicar)
 2 - Fazer presets de fundo de projeto (no futuro deixar escolher quando for criar projeto)
+

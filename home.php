@@ -1,5 +1,5 @@
 <?php
-require "conexao.php";
+include "conexao.php";
 
 $sql = "select * from projetos";    // String com o comando SQL a ser executado
 // $comando = $pdo->query($sql);       // Montamos e deixamos o comando SQL preparado
@@ -21,7 +21,7 @@ function limitarTexto($texto, $limite) {
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" href="estilos/home.css">
+    <link rel="stylesheet" href="styles/home.css">
 </head>
 
 <body>
