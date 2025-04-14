@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="main">
         <input type="checkbox" id="chk" aria-hidden="true">
         <div class="Login">
-            <form method="POST" action="cadastro_cli.php">
+            <form method="POST" action="login.php">
                 <label for="chk" aria-hidden="true">Cadastrar Funcionário</label>
                 <input type="email" name="emailFunc" placeholder="E-mail" required="">
                 <input type="text" name="registroFunc" placeholder="Registro" required="">
