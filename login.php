@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="/styles/Logincss.css" />
+    <link rel="stylesheet" type="text/css" href="styles/Logincss.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
       rel="stylesheet"
@@ -81,6 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <!-- stats.js lib -->
     <script src="http://threejs.org/examples/js/libs/stats.min.js"></script>
-    <script type="text/javascript" src="login.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
   </body>
 </html>

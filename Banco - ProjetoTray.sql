@@ -204,6 +204,20 @@ CREATE TABLE sugestoes (
   FOREIGN KEY (id_Cli) REFERENCES cliente(idCli)
 );
 
+-- -----------------------------------------------------
+-- Tabela de histórico de tarefas
+-- -----------------------------------------------------
+CREATE TABLE historico_tarefas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    projeto_id INT NOT NULL,
+    tarefa_id INT,
+    acao ENUM('Adicionada', 'Modificada', 'Removida') NOT NULL,
+    nome_tarefa VARCHAR(255) NOT NULL,
+    data_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (projeto_id) REFERENCES projeto(idProj),
+    FOREIGN KEY (tarefa_id) REFERENCES tarefa(idTarefa)
+);
+
 
 
 -- -----------------------------------------------------

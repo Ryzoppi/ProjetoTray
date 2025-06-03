@@ -119,6 +119,9 @@ $projetos = listar_projetos($pdo);
         <div id="icones">
             <img id="userImg" src="assets/user.png" alt="Imagem de usuário">
             <a id="sino" href="#"><img src="assets/sino.png" alt="sino de notificações"></a> <!-- Quando quer que o 'a' leve a lugar nenhum, deixa um # no href -->
+            <a id="history" href="#">
+                <img src="assets/historico.jpeg" alt="histórico de tarefas" style="width: 32px; height: 32px;">
+            </a>
         </div>
     </header>
 
@@ -128,39 +131,6 @@ $projetos = listar_projetos($pdo);
             <div class="timeline">
                 <h2>Desenvolvimento</h2>
                 <button id="opnTimelineModal">Open Modal Teste</button>
-                <dialog id="dialogTimelineModal">
-                        <form method="post" action="adicionar_fase.php">
-                            <label for="idProjeto">Projeto:</label>
-                                <select id="idProjeto" name="idProjeto" required>
-                                  <option value="">Selecione um projeto</option>
-                                  <?php foreach ($projetos as $proj): ?>
-                                    <option value="<?= htmlspecialchars($proj['idProj']) ?>">
-                                      <?= htmlspecialchars($proj['nomeProj']) ?>
-                                    </option>
-                                  <?php endforeach; ?>
-                                </select>
-                                
-                                <br><br>
-                                
-                                <label for="nomeFase">Nome da Fase:</label>
-                                <input type="text" id="nomeFase" name="nomeFase" required>
-                                
-                                <br><br>
-                                
-                                <label for="nomeTarefa">Nome da Primeira Tarefa:</label>
-                                <input type="text" id="nomeTarefa" name="nomeTarefa" required>
-                                
-                                <br><br>
-                                
-                                <label for="descTarefa">Descrição da Primeira Tarefa:</label>
-                                <textarea id="descTarefa" name="descTarefa"></textarea>
-                                
-                                <br><br>
-                                
-                                <button type="submit">Adicionar Fase com Tarefa</button>
-                        </form>
-                    <button id="closeTimelineModal">Close</button>
-                </dialog>
                 <div class="etapas">
                     <?php foreach ($lista_colunas as $coluna) { ?>
                         <div class="fase" data-id="<?= $coluna['idCol'] ?>"><?= $coluna["nomeCol"] ?></div>
@@ -274,16 +244,66 @@ $projetos = listar_projetos($pdo);
 
             </div>
         </div>
-
     </main>
+
+    <!-- Modal para adicionar fase -->
+    <dialog id="dialogTimelineModal">
+        <form method="post" action="adicionar_fase.php">
+            <label for="idProjeto">Projeto:</label>
+            <select id="idProjeto" name="idProjeto" required>
+                <option value="">Selecione um projeto</option>
+                <?php foreach ($projetos as $proj): ?>
+                    <option value="<?= htmlspecialchars($proj['idProj']) ?>">
+                        <?= htmlspecialchars($proj['nomeProj']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <br><br>
+
+            <label for="nomeFase">Nome da Fase:</label>
+            <input type="text" id="nomeFase" name="nomeFase" required>
+
+            <br><br>
+
+            <label for="nomeTarefa">Nome da Primeira Tarefa:</label>
+            <input type="text" id="nomeTarefa" name="nomeTarefa" required>
+
+            <br><br>
+
+            <label for="descTarefa">Descrição da Primeira Tarefa:</label>
+            <textarea id="descTarefa" name="descTarefa"></textarea>
+
+            <br><br>
+
+            <button type="submit">Adicionar Fase com Tarefa</button>
+        </form>
+        <button id="closeTimelineModal">Close</button>
+    </dialog>
+
+    <!-- Modal de histórico -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Histórico de Tarefas</h3>
+            <button id="closeHistory" class="close-button">x</button>
+            <div id="historyContent">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Ação</th>
+                            <th>Tarefa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <script src="js/prjct_manager.js"></script>
 
 </body>
 
-<<<<<<< HEAD
-
 </html>
-=======
-</html>
-
