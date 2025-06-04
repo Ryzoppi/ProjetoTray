@@ -1,6 +1,6 @@
 <?php
 session_start();
-$_SESSION['tipo'] = 'funcionario';
+$_SESSION['tipo'] = 'cliente';
 
 if (!isset($_SESSION["idProj"])) {
     header("Location: login.php");
@@ -192,57 +192,61 @@ $projetos = listar_projetos($pdo);
         </div>
 
         <div class="sugestao-container">
-            <h3>Sugestões do Cliente</h3>
+            <?php if ($_SESSION["tipo"] == "cliente") { ?>
+                <h3>Sugestões do Cliente</h3>
 
-            <form method="POST" class="sugestao-form" action="salvar_sugestao.php">
-                <label>Tarefa Selecionada:</label><br>
-                <input type="text" name="tarefa" id="tarefa_selecionada" required><br><br>
+                <form method="POST" class="sugestao-form" action="salvar_sugestao.php">
+                    <label>Tarefa Selecionada:</label><br>
+                    <input type="text" name="tarefa" id="tarefa_selecionada" required><br><br>
 
-                <label>Mensagem:</label><br>
-                <textarea name="mensagem" rows="4" cols="50" required></textarea><br><br>
+                    <label>Mensagem:</label><br>
+                    <textarea name="mensagem" rows="4" cols="50" required></textarea><br><br>
 
-                <label>Categoria:</label><br>
-                <div class="radio-group">
-                    <input type="radio" name="categoria" value="adicionar" required> Adicionar
-                    <input type="radio" name="categoria" value="incrementar"> Incrementar
-                    <input type="radio" name="categoria" value="remover"> Remover
-                </div>
-
-                <button type="submit" name="enviar_sugestao">Enviar</button>
-            </form>
-
-            <hr>
-
-            <div class="sugestoes-lista">
-
-                <div class="sugestoes-coluna">
-                    <h4>Sugestões em Análise</h4>
-                    <div id="lista_em_analise">
-                        <?php foreach ($lista_sugestoes_em_analise as $sugestao) { ?>
-                            <div id="sugestao">
-                                <p>Tarefa: <?= $sugestao['tarefa'] ?></p>
-                                <p>Categoria: <?= $sugestao['categoria'] ?></p>
-                                <p>Mensagem: <?= $sugestao['mensagem'] ?></p>
-                            </div>
-                        <?php } ?>
+                    <label>Categoria:</label><br>
+                    <div class="radio-group">
+                        <input type="radio" name="categoria" value="adicionar" required> Adicionar
+                        <input type="radio" name="categoria" value="incrementar"> Incrementar
+                        <input type="radio" name="categoria" value="remover"> Remover
                     </div>
-                </div>
 
-                <div class="sugestoes-coluna">
-                    <h4>Sugestões com Feedback</h4>
-                    <div id="lista_com_feedback">
-                        <?php foreach ($lista_sugestoes_com_feedback as $sugestao) { ?>
-                            <div id="sugestao">
-                                <p>Tarefa: <?= $sugestao['tarefa'] ?></p>
-                                <p>Mensagem: <?= $sugestao['mensagem'] ?></p>
-                                <p>Resposta: <?= $sugestao['resposta_funcionario'] ?></p>
-                                <p>Feedback: <?= $sugestao['feedback'] ?></p>
-                            </div>
-                        <?php } ?>
+                    <button type="submit" name="enviar_sugestao">Enviar</button>
+                </form>
+
+                <hr>
+
+                <div class="sugestoes-lista">
+
+                    <div class="sugestoes-coluna">
+                        <h4>Sugestões em Análise</h4>
+                        <div id="lista_em_analise">
+                            <?php foreach ($lista_sugestoes_em_analise as $sugestao) { ?>
+                                <div id="sugestao">
+                                    <p>Tarefa: <?= $sugestao['tarefa'] ?></p>
+                                    <p>Categoria: <?= $sugestao['categoria'] ?></p>
+                                    <p>Mensagem: <?= $sugestao['mensagem'] ?></p>
+                                </div>
+                            <?php } ?>
+                        </div>
                     </div>
-                </div>
 
-            </div>
+                    <div class="sugestoes-coluna">
+                        <h4>Sugestões com Feedback</h4>
+                        <div id="lista_com_feedback">
+                            <?php foreach ($lista_sugestoes_com_feedback as $sugestao) { ?>
+                                <div id="sugestao">
+                                    <p>Tarefa: <?= $sugestao['tarefa'] ?></p>
+                                    <p>Mensagem: <?= $sugestao['mensagem'] ?></p>
+                                    <p>Resposta: <?= $sugestao['resposta_funcionario'] ?></p>
+                                    <p>Feedback: <?= $sugestao['feedback'] ?></p>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+                </div>
+            <?php } else { ?>
+
+            <?php } ?>
         </div>
     </main>
 

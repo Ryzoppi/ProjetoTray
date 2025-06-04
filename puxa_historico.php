@@ -15,5 +15,4 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([$_SESSION['idProj']]);
 $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-header('Content-Type: application/json');
 echo json_encode($history);

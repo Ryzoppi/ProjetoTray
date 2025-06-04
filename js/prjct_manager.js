@@ -281,6 +281,7 @@ async function excluirTarefa(idTarefa, idColuna) {
       const idColunaAtiva = parseInt(faseAtiva.dataset.id);
       listarTarefasDaColuna(idColunaAtiva);
       atualizarDetalhesFase(idColunaAtiva);
+      loadHistory();
       resetForm();
     }
   }
