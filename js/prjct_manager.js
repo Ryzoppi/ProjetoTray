@@ -1,11 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
   initializePhases();
+
+  const historyBtn = document.getElementById('history');
+  const historyModal = document.getElementById('historyModal');
+  const closeHistory = document.getElementById('closeHistory');
+
+  if (historyBtn && historyModal) {
+    historyBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      historyModal.style.display = 'block';
+      loadHistory();
+    });
+
+    closeHistory.addEventListener('click', function () {
+      historyModal.style.display = 'none';
+    });
+
+    historyModal.addEventListener('click', function (e) {
+      if (e.target === historyModal) {
+        historyModal.style.display = 'none';
+      }
+    });
+  }
 });
 
-function initializePhases() {
-  preparandoFases();
+async function loadHistory() {
+  try {
+    const response = await fetch('puxa_historico.php');
+    const historyData = await response.json();
 
+
+    const tableBody = document.getElementById('historyTableBody');
+    tableBody.innerHTML = historyData.map(item => `
+            <tr>
+                <td>${item.date}</td>
+                <td>${item.action}</td>
+                <td>${item.task}</td>
+            </tr>
+        `).join('');
+  } catch (error) {
+    console.error('Erro ao carregar histórico:', error);
+    document.getElementById('historyTableBody').innerHTML = `
+            <tr>
+                <td colspan="3">Erro ao carregar histórico</td>
+            </tr>`;
+  }
+}
+
+
+function initializePhases() {
+  const etapasContainer = document.querySelector('.etapas');
+  if (etapasContainer && !document.querySelector('.progresso-timeline')) {
+    const progressoElement = document.createElement('div');
+    progressoElement.className = 'progresso-timeline';
+    etapasContainer.appendChild(progressoElement);
+  }
+
+  preparandoFases();
   document.querySelector('.fase').click();
+  atualizarProgressoTimeline();
 }
 
 function preparandoFases() {
@@ -86,7 +139,7 @@ function listarTarefasDaColuna(idColuna) {
 
 function createTaskElement(tarefa) {
   const isClientView = document.querySelector('.adicionar_tarefa') === null;
-  
+
   return `
     <div class="tarefa-item estado-${tarefa.estado_tarefa}" data-id="${tarefa.idTarefa}">
       <div class="tarefa-conteudo">
@@ -96,10 +149,10 @@ function createTaskElement(tarefa) {
         </div>
         <div class="tarefa-acoes">
           ${isClientView
-            ? `<button class="btn-sugestao" data-id="${tarefa.idTarefa}">Sugestão</button>`
-            : `<button class="btn-editar" data-id="${tarefa.idTarefa}">Editar</button>
+      ? `<button class="btn-sugestao" data-id="${tarefa.idTarefa}">Sugestão</button>`
+      : `<button class="btn-editar" data-id="${tarefa.idTarefa}">Editar</button>
                <button class="btn-excluir" data-id="${tarefa.idTarefa}">Excluir</button>`
-          }
+    }
         </div>
       </div>
       <div class="tarefa-status">
@@ -228,6 +281,7 @@ async function excluirTarefa(idTarefa, idColuna) {
       const idColunaAtiva = parseInt(faseAtiva.dataset.id);
       listarTarefasDaColuna(idColunaAtiva);
       atualizarDetalhesFase(idColunaAtiva);
+      loadHistory();
       resetForm();
     }
   }
@@ -245,7 +299,7 @@ function getStatusText(estado) {
 function sugerirMudanca(idTarefa, idColuna) {
   const tarefa = tarefasData.find(t => t.idTarefa === idTarefa && t.coluna_idCol === idColuna);
   document.getElementById('tarefa_selecionada').value = tarefa.nomeTarefa;
-  
+
   // Rola a página para o formulário
   document.querySelector('.sugestao-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -256,10 +310,53 @@ document.addEventListener("DOMContentLoaded", () => {
   const timelineModal = document.querySelector('#dialogTimelineModal');
 
   opnTimelineModal.addEventListener("click", () => {
-      timelineModal.showModal();
+    timelineModal.showModal();
   });
 
   closeTimelineModal.addEventListener("click", () => {
     timelineModal.close();
   });
 });
+
+
+function atualizarProgressoTimeline() {
+  const etapas = document.querySelectorAll('.fase');
+  if (etapas.length === 0) return;
+
+  etapas.forEach(fase => {
+    fase.classList.remove('completa', 'em-andamento', 'nao-iniciada');
+  });
+
+  let totalTarefas = 0;
+  let tarefasConcluidas = 0;
+
+  colunasData.forEach(coluna => {
+    const tarefasDaFase = tarefasData.filter(tarefa => tarefa.coluna_idCol === coluna.idCol);
+    totalTarefas += tarefasDaFase.length;
+    tarefasConcluidas += tarefasDaFase.filter(t => t.estado_tarefa === 2).length;
+  });
+
+  colunasData.forEach((coluna, index) => {
+    const faseElement = document.querySelector(`.fase[data-id="${coluna.idCol}"]`);
+    if (!faseElement) return;
+
+    const tarefasDaFase = tarefasData.filter(tarefa => tarefa.coluna_idCol === coluna.idCol);
+    const totalTarefasFase = tarefasDaFase.length;
+    const tarefasConcluidasFase = tarefasDaFase.filter(t => t.estado_tarefa === 2).length;
+    const percentualFase = totalTarefasFase > 0 ? (tarefasConcluidasFase / totalTarefasFase) * 100 : 0;
+
+    if (percentualFase === 100) {
+      faseElement.classList.add('completa');
+    } else if (percentualFase > 0) {
+      faseElement.classList.add('em-andamento');
+    } else {
+      faseElement.classList.add('nao-iniciada');
+    }
+  });
+
+  const progressoGeral = document.querySelector('.progresso-timeline');
+  if (progressoGeral) {
+    const percentualGeral = totalTarefas > 0 ? (tarefasConcluidas / totalTarefas) * 100 : 0;
+    progressoGeral.style.width = `${percentualGeral}%`;
+  }
+}

@@ -72,14 +72,21 @@ CREATE TABLE IF NOT EXISTS ProjetoTray.projeto (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS ProjetoTray.notificacao (
   idNot INT NOT NULL AUTO_INCREMENT,
-  assuntoNot VARCHAR(45) NOT NULL,
-  conteudoNot VARCHAR(200) NOT NULL,
-  remetenteNot INT NOT NULL, -- Vai salvar o id de quem enviou
-  PRIMARY KEY (idNot),
+  tarefaNot VARCHAR(45) NOT NULL,
+  conteudoNot VARCHAR(500) NOT NULL,
+  remetenteNot INT NOT NULL,
+  projeto_idProj INT NOT NULL,
+  PRIMARY KEY (idNot, projeto_idProj),
   INDEX fk_notificacao_login1_idx (remetenteNot ASC) VISIBLE,
+  INDEX fk_notificacao_projeto1_idx (projeto_idProj ASC) VISIBLE,
   CONSTRAINT fk_notificacao_login1
     FOREIGN KEY (remetenteNot)
     REFERENCES ProjetoTray.login (idLogin)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_notificacao_projeto1
+    FOREIGN KEY (projeto_idProj)
+    REFERENCES ProjetoTray.projeto (idProj)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -172,21 +179,23 @@ CREATE TABLE IF NOT EXISTS ProjetoTray.projeto_has_coluna_has_tarefa (
 -- Tabela de destinatário das notificações
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS ProjetoTray.destinatario (
-  notificacao_idNot INT NOT NULL, -- id da notificação que o destinatário vai receber
-  login_idLogin INT NOT NULL, -- id de quem vai receber
-  PRIMARY KEY (notificacao_idNot, login_idLogin),
+  notificacao_idNot INT NOT NULL,
+  projeto_idProj INT NOT NULL,
+  login_idLogin INT NOT NULL,
+  PRIMARY KEY (notificacao_idNot, projeto_idProj, login_idLogin),
   INDEX fk_notificacao_has_login_login1_idx (login_idLogin ASC) VISIBLE,
-  INDEX fk_notificacao_has_login_notificacao1_idx (notificacao_idNot ASC) VISIBLE,
+  INDEX fk_notificacao_has_login_notificacao1_idx (notificacao_idNot ASC, projeto_idProj ASC) VISIBLE,
   CONSTRAINT fk_notificacao_has_login_notificacao1
-    FOREIGN KEY (notificacao_idNot)
-    REFERENCES ProjetoTray.notificacao (idNot)
+    FOREIGN KEY (notificacao_idNot, projeto_idProj)
+    REFERENCES ProjetoTray.notificacao (idNot, projeto_idProj)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT fk_notificacao_has_login_login1
     FOREIGN KEY (login_idLogin)
     REFERENCES ProjetoTray.login (idLogin)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON UPDATE NO ACTION
+);
 
 -- -----------------------------------------------------
 -- Tabela de destinatário das notificações
@@ -202,6 +211,18 @@ CREATE TABLE sugestoes (
   feedback ENUM('positivo', 'negativo'),
   data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_Cli) REFERENCES cliente(idCli)
+);
+
+-- -----------------------------------------------------
+-- Tabela de histórico de tarefas
+-- -----------------------------------------------------
+CREATE TABLE historico_tarefas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    projeto_id INT NOT NULL,
+    acao ENUM('Adicionada', 'Modificada', 'Removida') NOT NULL,
+    nome_tarefa VARCHAR(255) NOT NULL,
+    data_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (projeto_id) REFERENCES projeto(idProj)
 );
 
 
@@ -229,9 +250,9 @@ INSERT INTO projeto (nomeProj, descProj) VALUES
 ("E-commerce Lojas Giga", "Site para vendas online"),
 ("E-commerce Varejo Marília", "Melhoria do último projeto");
 
-INSERT INTO notificacao (assuntoNot, conteudoNot, remetenteNot) VALUES
-("Modificações", "Adicionei mudanças que gostaria que fizessem no meu site", 3),
-("Remoção", "Não gostei de algumas coisas que adicionaram, não combina com meu trabalho, segue mudanças", 4);
+INSERT INTO notificacao (tarefaNot, conteudoNot, remetenteNot, projeto_idProj) VALUES
+("Modificações", "Adicionei mudanças que gostaria que fizessem no meu site", 3, 1),
+("Remoção", "Não gostei de algumas coisas que adicionaram, não combina com meu trabalho, segue mudanças", 4, 2);
 
 INSERT INTO funcionario_has_projeto (funcionario_idFunc, projeto_idProj) VALUES
 (1, 1),
@@ -257,7 +278,7 @@ INSERT INTO projeto_has_coluna_has_tarefa (projeto_idProj, coluna_idCol, tarefa_
 (1, 2, 1, 2),
 (2, 2, 2, 0);
 
-INSERT INTO destinatario (notificacao_idNot, login_idLogin) VALUES
-(1, 1),
-(1, 2),
-(2, 2);
+INSERT INTO destinatario (notificacao_idNot, projeto_idProj, login_idLogin) VALUES
+(1, 1, 1),
+(1, 1, 2),
+(2, 2, 2);

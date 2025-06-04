@@ -89,23 +89,23 @@ main, header {
 .etapas {
     width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     position: relative;
     margin-top: 10px;
+    padding: 0 20px;
 }
 
 .etapas::before {
     content: '';
     position: absolute;
     top: 50%;
-    left: 0;
-    right: 0;
+    left: 20px;
+    right: 20px;
     height: 10px;
-    background: linear-gradient(90deg, #43A0D6 0%, #43A0D6 80%, #e0e0e0 80%, #e0e0e0 100%);
+    background: #e0e0e0;
     z-index: 0;
     border-radius: 3px;
-    margin: 0 20px;
 }
 
 .fase {
@@ -114,11 +114,12 @@ main, header {
     border-radius: 8px;
     font-size: 24px;
     color: #2e2e2e;
-    z-index: 1;
+    z-index: 2;
     position: relative;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-bottom: 70px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .fase:hover {
@@ -534,4 +535,143 @@ main, header {
 
 #dialogTimelineModal::backdrop{
     background-color: rgba(0, 0, 0, 0.8);
+}
+
+.progresso-timeline {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    height: 10px;
+    background: #43A0D6;
+    z-index: 1;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.fase.completa::after {
+    background-color: #2ecc71;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+}
+
+.fase.em-andamento::after {
+    background-color: #f39c12;
+    box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.3);
+}
+
+.fase.nao-iniciada::after {
+    background-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+}
+
+#history img {
+    width: 24px;
+    height: 24px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+#historyModal {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    max-height: 500px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+#historyModal h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+#closeHistory {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#historyContent {
+    padding: 15px;
+}
+
+#historyContent table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#historyContent th {
+    background-color: #f5f5f5;
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#historyContent td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Modal */
+#historyModal.modal {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    max-height: 500px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.modal-content {
+    padding: 15px;
+    position: relative;
+}
+
+.modal-title {
+    margin-top: 0;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table thead tr {
+    background-color: #f5f5f5;
+}
+
+.history-table th {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.history-table td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
 }

@@ -117,7 +117,7 @@ function limitarTexto($texto, $limite)
             <!-- Código em PHP para puxar as notificações do banco -->
             <?php foreach ($notificacoes as $notificacao) { ?>
                 <div class="notificacao">
-                    <h3><?= $notificacao["assuntoNot"] ?></h3>
+                    <h3><?= $notificacao["tarefaNot"] ?></h3>
                     <p><?= limitarTexto($notificacao["conteudoNot"], 80) ?></p>
                 </div>
             <?php } ?>
