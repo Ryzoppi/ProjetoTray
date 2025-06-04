@@ -59,7 +59,7 @@ function puxa_notificacoes(PDO $pdo)
 
 function puxa_sugestoes_em_analise(PDO $pdo)
 {
-    $sql = "SELECT tarefa, mensagem, categoria FROM sugestoes WHERE status = 'em_analise'";
+    $sql = "SELECT id, tarefa, mensagem, categoria FROM sugestoes WHERE status = 'em_analise'";
     $comando = $pdo->query($sql);
 
     return $comando->fetchAll();
@@ -130,7 +130,33 @@ $projetos = listar_projetos($pdo);
             <!-- Linha do tempo do projeto -->
             <div class="timeline">
                 <h2>Desenvolvimento</h2>
-                <button id="opnTimelineModal">Open Modal Teste</button>
+                <button class="botao_timeline" id="opnTimelineModal">Nova Fase</button>
+                <button class="botao_timeline" id="btnApagarFase">Apagar Fase</button>
+                <!-- Modal para adicionar fase -->
+                <dialog id="dialogTimelineModal">
+                        <form method="post" action="adicionar_fase.php">
+                                
+                                <input type="hidden" id="idProjeto" name="idProjeto" value="<?= $_SESSION['idProj'] ?>">
+
+                                <label for="nomeFase">Nome da Fase:</label>
+                                <input type="text" id="nomeFase" name="nomeFase" required>
+                                
+                                <br><br>
+                                
+                                <label for="nomeTarefa">Nome da Primeira Tarefa:</label>
+                                <input type="text" id="nomeTarefa" name="nomeTarefa" required>
+                                
+                                <br><br>
+                                
+                                <label for="descTarefa">Descrição da Primeira Tarefa:</label>
+                                <textarea id="descTarefa" name="descTarefa"></textarea>
+                                
+                                <br><br>
+                                
+                                <button class="botao_timeline" type="submit">Adicionar Fase com Tarefa</button>
+                        </form>
+                    <button class="botao_timeline" id="closeTimelineModal">Close</button>
+                </dialog>
                 <div class="etapas">
                     <?php foreach ($lista_colunas as $coluna) { ?>
                         <div class="fase" data-id="<?= $coluna['idCol'] ?>"><?= $coluna["nomeCol"] ?></div>
@@ -230,7 +256,7 @@ $projetos = listar_projetos($pdo);
                     </div>
 
                     <div class="sugestoes-coluna">
-                        <h4>Sugestões com Feedback</h4>
+                            <h4>Sugestões com Feedback</h4>
                         <div id="lista_com_feedback">
                             <?php foreach ($lista_sugestoes_com_feedback as $sugestao) { ?>
                                 <div id="sugestao">
@@ -248,42 +274,30 @@ $projetos = listar_projetos($pdo);
 
             <?php } ?>
         </div>
+        <div class="sugestao-container-func"> 
+            <div class="sugestoes-lista-func">
+                <?php foreach ($lista_sugestoes_em_analise as $index => $sugestao) { ?>
+                <div class="sugestao-bloco">
+                    <p><strong>Tarefa:</strong> <?= $sugestao['tarefa'] ?></p>
+                    <p><strong>Categoria:</strong> <?= $sugestao['categoria'] ?></p>
+                    <p><strong>Mensagem:</strong> <?= $sugestao['mensagem'] ?></p>
+
+                    <form method="POST" action="feedback_sugestao.php">
+                        <input type="hidden" name="id" value="<?= $sugestao['id'] ?>">
+                        <textarea name="resposta_funcionario" placeholder="Escreva sua resposta..." required></textarea><br>
+
+                        <button class="botao_feedback" type="submit" name="acao" value="aprovar">Aprovar</button>
+                        <button class="botao_feedback" type="submit" name="acao" value="rejeitar">Rejeitar</button>
+                    </form>
+                </div>
+                <hr>
+            <?php } ?>
+            </div>
+        </div>
+
     </main>
 
     <!-- Modal para adicionar fase -->
-    <dialog id="dialogTimelineModal">
-        <form method="post" action="adicionar_fase.php">
-            <label for="idProjeto">Projeto:</label>
-            <select id="idProjeto" name="idProjeto" required>
-                <option value="">Selecione um projeto</option>
-                <?php foreach ($projetos as $proj): ?>
-                    <option value="<?= htmlspecialchars($proj['idProj']) ?>">
-                        <?= htmlspecialchars($proj['nomeProj']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <br><br>
-
-            <label for="nomeFase">Nome da Fase:</label>
-            <input type="text" id="nomeFase" name="nomeFase" required>
-
-            <br><br>
-
-            <label for="nomeTarefa">Nome da Primeira Tarefa:</label>
-            <input type="text" id="nomeTarefa" name="nomeTarefa" required>
-
-            <br><br>
-
-            <label for="descTarefa">Descrição da Primeira Tarefa:</label>
-            <textarea id="descTarefa" name="descTarefa"></textarea>
-
-            <br><br>
-
-            <button type="submit">Adicionar Fase com Tarefa</button>
-        </form>
-        <button id="closeTimelineModal">Close</button>
-    </dialog>
 
     <!-- Modal de histórico -->
     <div id="historyModal" class="modal">
@@ -305,9 +319,5 @@ $projetos = listar_projetos($pdo);
             </div>
         </div>
     </div>
-
     <script src="js/prjct_manager.js"></script>
-
 </body>
-
-</html>

@@ -42,3 +42,31 @@ foreach ($funcionarios as $funcionario) {
 # Redireciona de volta para a página de gerenciamento de projeto
 header("Location: prjct_manager.php");
 exit();
+session_start();
+$_SESSION['tipo'] = 'cliente';
+print_r($_SESSION);
+include "conexao.php"; 
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["enviar_sugestao"])) {
+    $tarefa = $_POST["tarefa"];
+    $mensagem = $_POST["mensagem"];
+    $categoria = $_POST["categoria"];
+    $idCliente = $_SESSION['usuario_id'] ?? null; 
+
+    $sql = $sql = "INSERT INTO sugestoes (tarefa, mensagem, categoria, status, id_Cli) 
+        VALUES (:tarefa, :mensagem, :categoria, 'em_analise', :idCli)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':tarefa', $tarefa);
+    $stmt->bindParam(':mensagem', $mensagem);
+    $stmt->bindParam(':categoria', $categoria);
+    $stmt->bindParam(':idCli', $idCliente, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+        header("Location: prjct_manager.php"); 
+        exit();
+    } else {
+        echo "Erro ao salvar sugestão.";
+    }
+} else {
+    echo "Requisição inválida.";
+}

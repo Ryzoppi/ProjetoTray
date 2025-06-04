@@ -360,3 +360,42 @@ function atualizarProgressoTimeline() {
     progressoGeral.style.width = `${percentualGeral}%`;
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    let faseSelecionada = null;
+
+    // Armazena a fase selecionada quando clicada
+    document.querySelectorAll('.fase').forEach(fase => {
+        fase.addEventListener('click', () => {
+            document.querySelectorAll('.fase').forEach(f => f.classList.remove('ativa'));
+            fase.classList.add('ativa');
+            faseSelecionada = fase.getAttribute('data-id');
+        });
+    });
+
+    // Botão de apagar fase
+    const btnApagar = document.getElementById('btnApagarFase');
+    btnApagar.addEventListener('click', () => {
+        if (!faseSelecionada) {
+            alert("Selecione uma fase para apagar.");
+            return;
+        }
+
+        if (confirm("Tem certeza que deseja apagar esta fase e todas as tarefas associadas?")) {
+            fetch('apagar_fase.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `idColuna=${encodeURIComponent(faseSelecionada)}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert("Fase apagada com sucesso.");
+                location.reload();
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erro ao apagar a fase.");
+            });
+        }
+    });
+});

@@ -675,3 +675,35 @@ main, header {
     padding: 8px;
     border-bottom: 1px solid #eee;
 }
+
+.sugestoes-coluna{
+    max-height: 60vh;
+    width: 80;
+    overflow: scroll;
+}
+
+.botao_timeline{
+    background-color: #43A0D6;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.botao_timeline:hover{
+    background-color: #0056b3;
+}
+
+.botao_feedback{
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.botao_feedback:hover{
+    background-color: #0056b3;
+}
