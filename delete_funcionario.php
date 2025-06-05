@@ -1,10 +1,11 @@
 <?php
 include 'conexao.php';
 
+$idFunc = $_POST['idFunc'];
 $sql = "SELECT login_idLogin FROM funcionario WHERE idFunc = ?";
 $comando = $pdo->prepare($sql);
 $comando->execute([$idFunc]);
-$login_funcionario = $stmt->fetch(PDO::FETCH_ASSOC);
+$login_funcionario = $comando->fetch(PDO::FETCH_ASSOC);
 
 $idLogin = $login_funcionario['login_idLogin'];
 
