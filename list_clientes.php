@@ -1,16 +1,20 @@
 <?php
 include 'conexao.php';
 
-// Listagem de Clientes
+// Ativar erros
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Consulta clientes
 $sql = "SELECT c.idCli, c.nomeCli, c.empresaCli, c.telefoneCli, l.emailLogin 
         FROM cliente c
         INNER JOIN login l ON c.login_idLogin = l.idLogin
         ORDER BY c.idCli";
-
 $comando = $pdo->query($sql);
-$lista_cliente = $comando->fetchAll();
+$lista_cliente = $comando->fetchAll(PDO::FETCH_ASSOC);
 
-// Título com botão "Novo Cliente"
+// Título com botão
 echo '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <h2 style="margin: 0;">Lista de Clientes</h2>
         <button onclick="document.getElementById(\'modal-novo-cliente\').style.display=\'block\'" 
@@ -19,7 +23,7 @@ echo '<div style="display: flex; justify-content: space-between; align-items: ce
         </button>
       </div>';
 
-// Listagem de clientes
+// Lista
 if (count($lista_cliente) > 0) {
     echo "<ul>";
     foreach ($lista_cliente as $cliente) {
@@ -40,7 +44,7 @@ if (count($lista_cliente) > 0) {
 }
 ?>
 
-<!-- Modal de Cadastro de Novo Cliente -->
+<!-- Modal de Novo Cliente -->
 <div id="modal-novo-cliente" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; padding:20px; border:1px solid #ccc; z-index:1000;">
     <h3>Novo Cliente</h3>
     <form method="POST" action="salvar_cliente.php">
@@ -57,9 +61,9 @@ if (count($lista_cliente) > 0) {
         <button type="submit">Salvar</button>
         <button type="button" onclick="document.getElementById('modal-novo-cliente').style.display='none'">Cancelar</button>
     </form>
-</div>
+</div> 
 
-<!-- Modal de Edição de Cliente -->
+<!-- Modal de Edição -->
 <div id="modal-cliente" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; padding:20px; border:1px solid #ccc; z-index:1000;">
     <h3>Editar Cliente</h3>
     <form method="POST" action="editar_cliente.php" style="margin-bottom: 10px;">
