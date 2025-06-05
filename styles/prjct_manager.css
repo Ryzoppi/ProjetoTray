@@ -439,17 +439,17 @@ main, header {
 
 /* Container principal da sugestão */
 .sugestao-container {
-    border: 2px solid #333;
+    background-color: #fff;
     padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-top: 40px;
-    border-radius: 10px;
-    background-color: #f9f9f9;
 }
 
 /* Título da seção */
 .sugestao-container h3 {
     margin-bottom: 20px;
-    font-size: 1.4rem;
+    font-size: 36px;
 }
 
 /* Formulário */
@@ -460,6 +460,9 @@ main, header {
     margin: 5px 0 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .sugestao-form label {
@@ -473,16 +476,17 @@ main, header {
 }
 
 .sugestao-form button {
-    background-color: #007bff;
+    background-color: #43A0D6;
     color: white;
     border: none;
     padding: 10px 25px;
     border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 20px
 }
 
 .sugestao-form button:hover {
-    background-color: #0056b3;
+    background-color: #2e85c8;
 }
 
 /* Listas de sugestões */
