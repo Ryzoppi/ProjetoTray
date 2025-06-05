@@ -1,6 +1,7 @@
 <?php
 include 'conexao.php';
 
+$idCli = $_POST['idCli'];
 $sql = "SELECT login_idLogin FROM cliente WHERE idCli = ?";
 $comando = $pdo->prepare($sql);
 $comando->execute([$idCli]);
