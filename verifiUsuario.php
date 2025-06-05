@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    echo "Login inválido!";
+    header("Location: login.php?erro=1");
+    exit;
 }
-?>
+?> 

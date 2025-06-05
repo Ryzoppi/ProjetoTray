@@ -22,6 +22,11 @@ include 'conexao.php';
       <div class="Login">
         <form method="post" action="verifiUsuario.php">
           <label for="chk" aria-hidden="true">Cliente</label>
+          <?php if (isset($_GET['erro']) && $_GET['erro'] == 1): ?>
+              <div style="color: red; text-align: center; margin-bottom: 15px;">
+                E-mail ou senha inválidos!
+              </div>
+          <?php endif; ?>
           <input type="email" name="email" placeholder="E-mail" required="" />
           <input type="password" name="senha" placeholder="Senha" required="" />
           <button>Login</button>
