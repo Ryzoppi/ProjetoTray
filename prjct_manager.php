@@ -139,8 +139,10 @@ $projetos = listar_projetos($pdo);
             <!-- Linha do tempo do projeto -->
             <div class="timeline">
                 <h2>Desenvolvimento</h2>
-                <button class="botao_timeline" id="opnTimelineModal">Nova Fase</button>
-                <button class="botao_timeline" id="btnApagarFase">Apagar Fase</button>
+                <?php if ($_SESSION["tipo"] == "funcionario") { ?>
+                    <button class="botao_timeline" id="opnTimelineModal">Nova Fase</button>
+                    <button class="botao_timeline" id="btnApagarFase">Apagar Fase</button>
+                <?php } ?>
                 <!-- Modal para adicionar fase -->
                 <dialog id="dialogTimelineModal">
                     <form method="post" action="adicionar_fase.php">
@@ -287,6 +289,17 @@ $projetos = listar_projetos($pdo);
                                 <p><strong>Tarefa:</strong> <?= $sugestao['tarefa'] ?></p>
                                 <p><strong>Categoria:</strong> <?= $sugestao['categoria'] ?></p>
                                 <p><strong>Mensagem:</strong> <?= $sugestao['mensagem'] ?></p>
+
+            <?php } ?>
+        </div>
+        <div class="sugestao-container-func"> 
+            <h3>Sugestões para Análise</h3>
+            <div class="sugestoes-lista-func">
+                <?php foreach ($lista_sugestoes_em_analise as $index => $sugestao) { ?>
+                <div class="sugestao-bloco">
+                    <p><strong>Tarefa:</strong> <?= $sugestao['tarefa'] ?></p>
+                    <p><strong>Categoria:</strong> <?= $sugestao['categoria'] ?></p>
+                    <p><strong>Mensagem:</strong> <?= $sugestao['mensagem'] ?></p>
 
                                 <form method="POST" action="feedback_sugestao.php">
                                     <input type="hidden" name="id" value="<?= $sugestao['id'] ?>">

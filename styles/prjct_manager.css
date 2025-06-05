@@ -689,7 +689,7 @@ main, header {
 
 .sugestoes-coluna{
     max-height: 60vh;
-    width: 80;
+    width: 20vh;
     overflow: scroll;
 }
 
@@ -717,4 +717,23 @@ main, header {
 
 .botao_feedback:hover{
     background-color: #0056b3;
+}
+
+.sugestao-container-func{
+    max-height: 60vh;
+    width: 40;
+    overflow: scroll;
+}
+
+.sugestao-bloco {
+    border: 1px solid #ccc; 
+    padding: 10px;
+    margin: 5px 0;
+}
+
+.sugestoes-bloco h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
 }

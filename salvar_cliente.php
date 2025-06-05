@@ -13,7 +13,7 @@ $comando = $pdo->prepare($sql_checa_email);
 $comando->execute([$email]);
 $email_checado = $comando->fetchAll();
 
-if (empty($email_checado)) {
+if (count($email_checado)>0) {
     echo "<p style='color:red;'>Erro: Email já cadastrado.</p>";
 } else {
     // Inserir na tabela login com tipo_idTipo
