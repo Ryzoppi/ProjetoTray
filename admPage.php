@@ -1,5 +1,10 @@
 <?php 
+session_start();
 include "conexao.php";
+
+if (!isset($_SESSION["usuario_id"])) {
+    header("Location: login.php");
+}
 
 $sql = "SELECT * FROM cliente ORDER BY idCli DESC";
 $comando = $pdo->query($sql);

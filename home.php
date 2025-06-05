@@ -1,11 +1,43 @@
 <?php
+session_start();
 include "conexao.php";
 
-$sql = "select * from projeto";    // String com o comando SQL a ser executado
+if (!isset($_SESSION["usuario_id"])) {
+    header("Location: login.php");
+}
+
+$sql = "SELECT p.nomeProj, p.idProj FROM projeto p "; // String com o comando SQL a ser executado
+
+if ($_SESSION["tipo"] == "funcionario") {
+    $sql .= "INNER JOIN funcionario_has_projeto fp 
+                ON fp.projeto_idProj = p.idProj
+            WHERE fp.funcionario_idFunc = " . $_SESSION["usuario_id"];
+
+    $achaLogin = "SELECT l.idLogin FROM login l
+                INNER JOIN funcionario f
+                    ON f.login_idLogin = l.idLogin
+                WHERE f.idFunc = " . $_SESSION["usuario_id"];
+} else {
+    $sql .= "INNER JOIN cliente_has_projeto cp 
+                ON cp.projeto_idProj = p.idProj
+            WHERE cp.cliente_idCli = " . $_SESSION["usuario_id"];
+
+    $achaLogin = "SELECT l.idLogin FROM login l
+                INNER JOIN cliente c
+                    ON c.login_idLogin = l.idLogin
+                WHERE c.idCli = " . $_SESSION["usuario_id"];
+}
+
 $comando = $pdo->query($sql);       // Montamos e deixamos o comando SQL preparado
 $resultado = $comando->fetchAll();  // Executamos o comando $sql, nesse caso, todo o conteudo da tabela projeto
 
-$sql2 = "select * from notificacao";
+$comando = $pdo->query($achaLogin);
+$idLogin = $comando->fetch();
+
+$sql2 = "SELECT n.idNot, n.tarefaNot, n.conteudoNot FROM notificacao n 
+        INNER JOIN destinatario d
+            ON d.notificacao_idNot = n.idNot
+        WHERE d.login_idLogin = " . $idLogin["idLogin"];
 $comando2 = $pdo->query($sql2);
 $notificacoes = $comando2->fetchAll();
 
@@ -38,13 +70,14 @@ function limitarTexto($texto, $limite)
         <div id="barraUser">
             <div id="user">
                 <img id="userImg" src="assets/user.png" alt="Imagem de usuário">
-                <p>(Nome do usuário)</p>
+                <p><?= $_SESSION["nome"] ?></p>
             </div>
             <a id="sino" href=""><img id="sinoImg" src="assets/sino.png" alt="sino de notificações"></a>
         </div>
     </header>
 
     <main>
+        <?php if ($_SESSION["tipo"] == "funcionario") { ?>
         <!-- Barra de criação de projeto -->
         <div id="containerCriaProjeto">
             <div id="criarProjeto">
@@ -54,6 +87,7 @@ function limitarTexto($texto, $limite)
                 </a>
             </div>
         </div>
+        <?php } ?>
 
         <!-- Local onde ficam os projetos já existentes -->
         <div id="containerProjetos">
@@ -74,9 +108,6 @@ function limitarTexto($texto, $limite)
                                 <a href="abreProjeto.php?id=<?= $projeto["idProj"] ?>">
                                     <h2><?= $projeto["nomeProj"] ?></h2>
                                 </a>
-                                <div class="barra">
-                                    <div class="progressoBarra"></div>
-                                </div>
                                 <div class="maisInfoProjeto">
                                     <a class="maisLink" href="#">...</a> <!-- editar nome, descrição e prazo, excluir projeto ou marcar como concluído -->
                                 </div>
@@ -93,7 +124,7 @@ function limitarTexto($texto, $limite)
             <span id="fecharCriarProjeto">&times;</span>
             <h1>Criar Novo Projeto</h1>
             <div id="containerForm">
-                <form action="" id="formCriaProjeto">
+                <form method="post" action="criar_projeto.php" id="formCriaProjeto">
                     <div class="campoForm">
                         <label for="nome">Nome</label>
                         <input type="text" name="nome" required id="inputNomeProjeto">

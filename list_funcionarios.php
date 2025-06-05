@@ -1,6 +1,10 @@
 <?php
 include 'conexao.php';
 
+if (!isset($_SESSION["usuario_id"])) {
+    header("Location: login.php");
+}
+
 // Listagem de Funcionários
 $sql = "SELECT f.idFunc, f.nomeFunc, f.cargoFunc, l.emailLogin 
         FROM funcionario f

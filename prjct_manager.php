@@ -1,6 +1,5 @@
 <?php
 session_start();
-$_SESSION['tipo'] = 'cliente';
 
 if (!isset($_SESSION["idProj"])) {
     header("Location: login.php");
@@ -59,7 +58,12 @@ function puxa_notificacoes(PDO $pdo)
 
 function puxa_sugestoes_em_analise(PDO $pdo)
 {
-    $sql = "SELECT id, tarefa, mensagem, categoria FROM sugestoes WHERE status = 'em_analise'";
+    $sql = "SELECT s.id, s.tarefa, s.mensagem, s.categoria FROM sugestoes s
+            INNER JOIN cliente c
+                ON c.idCli = s.id_Cli
+            INNER JOIN cliente_has_projeto cp
+                ON cp.cliente_idCli = c.idCli
+            WHERE s.status LIKE 'em_analise' AND cp.projeto_idProj = {$_SESSION["idProj"]}";
     $comando = $pdo->query($sql);
 
     return $comando->fetchAll();
@@ -67,7 +71,12 @@ function puxa_sugestoes_em_analise(PDO $pdo)
 
 function puxa_sugestoes_com_feedback(PDO $pdo)
 {
-    $sql = "SELECT tarefa, mensagem, resposta_funcionario, feedback FROM sugestoes WHERE status = 'com_feedback'";
+    $sql = "SELECT s.tarefa, s.mensagem, s.resposta_funcionario, s.feedback FROM sugestoes s
+            INNER JOIN cliente c
+                ON c.idCli = s.id_Cli
+            INNER JOIN cliente_has_projeto cp
+                ON cp.cliente_idCli = c.idCli 
+            WHERE status LIKE 'com_feedback' AND cp.projeto_idProj = {$_SESSION["idProj"]}";
     $comando = $pdo->query($sql);
 
     return $comando->fetchAll();
@@ -112,7 +121,7 @@ $projetos = listar_projetos($pdo);
 <body>
     <!--Cabeçalho com logo, usuário e sino de notificações-->
     <header id="cabecalho">
-        <img id="logo" src="assets/logo.png" alt="logo da Tray">
+        <a href="home.php"><img id="logo" src="assets/logo.png" alt="logo da Tray"></a>
 
         <h1><?= $projeto["nomeProj"] ?></h1>
         <!-- "Barra" onde fica o indicador de usuário e o sino de notificações -->
@@ -134,27 +143,27 @@ $projetos = listar_projetos($pdo);
                 <button class="botao_timeline" id="btnApagarFase">Apagar Fase</button>
                 <!-- Modal para adicionar fase -->
                 <dialog id="dialogTimelineModal">
-                        <form method="post" action="adicionar_fase.php">
-                                
-                                <input type="hidden" id="idProjeto" name="idProjeto" value="<?= $_SESSION['idProj'] ?>">
+                    <form method="post" action="adicionar_fase.php">
 
-                                <label for="nomeFase">Nome da Fase:</label>
-                                <input type="text" id="nomeFase" name="nomeFase" required>
-                                
-                                <br><br>
-                                
-                                <label for="nomeTarefa">Nome da Primeira Tarefa:</label>
-                                <input type="text" id="nomeTarefa" name="nomeTarefa" required>
-                                
-                                <br><br>
-                                
-                                <label for="descTarefa">Descrição da Primeira Tarefa:</label>
-                                <textarea id="descTarefa" name="descTarefa"></textarea>
-                                
-                                <br><br>
-                                
-                                <button class="botao_timeline" type="submit">Adicionar Fase com Tarefa</button>
-                        </form>
+                        <input type="hidden" id="idProjeto" name="idProjeto" value="<?= $_SESSION['idProj'] ?>">
+
+                        <label for="nomeFase">Nome da Fase:</label>
+                        <input type="text" id="nomeFase" name="nomeFase" required>
+
+                        <br><br>
+
+                        <label for="nomeTarefa">Nome da Primeira Tarefa:</label>
+                        <input type="text" id="nomeTarefa" name="nomeTarefa" required>
+
+                        <br><br>
+
+                        <label for="descTarefa">Descrição da Primeira Tarefa:</label>
+                        <textarea id="descTarefa" name="descTarefa"></textarea>
+
+                        <br><br>
+
+                        <button class="botao_timeline" type="submit">Adicionar Fase com Tarefa</button>
+                    </form>
                     <button class="botao_timeline" id="closeTimelineModal">Close</button>
                 </dialog>
                 <div class="etapas">
@@ -256,7 +265,7 @@ $projetos = listar_projetos($pdo);
                     </div>
 
                     <div class="sugestoes-coluna">
-                            <h4>Sugestões com Feedback</h4>
+                        <h4>Sugestões com Feedback</h4>
                         <div id="lista_com_feedback">
                             <?php foreach ($lista_sugestoes_com_feedback as $sugestao) { ?>
                                 <div id="sugestao">
@@ -271,29 +280,30 @@ $projetos = listar_projetos($pdo);
 
                 </div>
             <?php } else { ?>
+                <div class="sugestao-container-func">
+                    <div class="sugestoes-lista-func">
+                        <?php foreach ($lista_sugestoes_em_analise as $index => $sugestao) { ?>
+                            <div class="sugestao-bloco">
+                                <p><strong>Tarefa:</strong> <?= $sugestao['tarefa'] ?></p>
+                                <p><strong>Categoria:</strong> <?= $sugestao['categoria'] ?></p>
+                                <p><strong>Mensagem:</strong> <?= $sugestao['mensagem'] ?></p>
 
-            <?php } ?>
-        </div>
-        <div class="sugestao-container-func"> 
-            <div class="sugestoes-lista-func">
-                <?php foreach ($lista_sugestoes_em_analise as $index => $sugestao) { ?>
-                <div class="sugestao-bloco">
-                    <p><strong>Tarefa:</strong> <?= $sugestao['tarefa'] ?></p>
-                    <p><strong>Categoria:</strong> <?= $sugestao['categoria'] ?></p>
-                    <p><strong>Mensagem:</strong> <?= $sugestao['mensagem'] ?></p>
+                                <form method="POST" action="feedback_sugestao.php">
+                                    <input type="hidden" name="id" value="<?= $sugestao['id'] ?>">
+                                    <input type="hidden" name="nomeTarefa" value="<?= $sugestao['tarefa'] ?>">
+                                    <textarea name="resposta_funcionario" placeholder="Escreva sua resposta..." required></textarea><br>
 
-                    <form method="POST" action="feedback_sugestao.php">
-                        <input type="hidden" name="id" value="<?= $sugestao['id'] ?>">
-                        <textarea name="resposta_funcionario" placeholder="Escreva sua resposta..." required></textarea><br>
-
-                        <button class="botao_feedback" type="submit" name="acao" value="aprovar">Aprovar</button>
-                        <button class="botao_feedback" type="submit" name="acao" value="rejeitar">Rejeitar</button>
-                    </form>
+                                    <button class="botao_feedback" type="submit" name="acao" value="aprovar">Aprovar</button>
+                                    <button class="botao_feedback" type="submit" name="acao" value="rejeitar">Rejeitar</button>
+                                </form>
+                            </div>
+                            <hr>
+                        <?php } ?>
+                    </div>
                 </div>
-                <hr>
             <?php } ?>
-            </div>
         </div>
+
 
     </main>
 

@@ -33,7 +33,7 @@ include 'conexao.php';
         </form>
       </div>
       <div class="Administrador">
-        <form method="post" action="verifiUsuario.php">
+        <form method="post" action="loginADM.php">
           <label for="chk" aria-hidden="true">Administrador</label>
           <input type="email" name="email" placeholder="E-mail" required="" />
           <input type="password" name="senha" placeholder="Senha" required="" />

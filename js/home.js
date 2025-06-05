@@ -115,19 +115,6 @@ document.getElementById('busca').addEventListener('input', () => {
                             var h2 = document.createElement('h2');
                             h2.textContent = produto.nomeProj; // Acessa o nome do projeto
                         
-                            // Cria a div "barra"
-                            var divBarra = document.createElement('div');
-                            divBarra.className = 'barra';
-                        
-                            // Cria a div "progressoBarra"
-                            var divProgressoBarra = document.createElement('div');
-                            divProgressoBarra.className = 'progressoBarra';
-                            // Aqui você pode definir a largura da barra de progresso, se necessário
-                            // divProgressoBarra.style.width = '50%'; // Exemplo de como definir a largura
-                        
-                            // Adiciona a barra de progresso à div "barra"
-                            divBarra.appendChild(divProgressoBarra);
-                        
                             // Cria a div "maisInfoProjeto"
                             var divMaisInfoProjeto = document.createElement('div');
                             divMaisInfoProjeto.className = 'maisInfoProjeto';
@@ -145,7 +132,6 @@ document.getElementById('busca').addEventListener('input', () => {
                             linkProjeto.appendChild(h2);
 
                             divInfoProjeto.appendChild(linkProjeto);
-                            divInfoProjeto.appendChild(divBarra);
                             divInfoProjeto.appendChild(divMaisInfoProjeto);
                             divDegradeFundo.appendChild(divInfoProjeto);
                         
