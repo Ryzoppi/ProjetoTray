@@ -1,6 +1,10 @@
 <?php
 include 'conexao.php';
 
+if (!isset($_SESSION["usuario_id"])) {
+    header("Location: login.php");
+}
+
 // Ativar erros
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
